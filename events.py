@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from collections import OrderedDict
 import sys
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
@@ -22,12 +23,25 @@ class EventsWindow(QMainWindow):
         self.setupButtonHandlers()
 
         # set channel presets
-        
-        
+        availablePresets = getMicroManagerPresets()
+        for preset in availablePresets:
+            self.ui.presets.addItem(preset)
+
+        # Minimum time to wait before you go back to acquire the first position
+        self.minTimeInterval = 0
+        # attach the time interval spinner to the value
+        self.ui.minTimeIntervalSpinBox.valueChanged.connect(self.timeIntervalChanged)
+
+        # number of time points 
+        self.nTimePoints = 1
+        # attach the time point spinner to the value
+        self.ui.nTimePointsSpinBox.valueChanged.connect(self.nTimePointsChanged)
 
         self.finalizedPositions = False
         self.listFastPositions = []
         self.listSlowPositions = []
+        self.finalEvents = []
+        self.finalizedEvents = False
 
 
     def setupButtonHandlers(self):
@@ -36,7 +50,6 @@ class EventsWindow(QMainWindow):
 
         # Finalize positions will get final positions for both slow and fast
         self.ui.finalizePositionsButton.clicked.connect(self.setFinalPositions)
-
 
         # Reset all positions and clean up
         self.ui.resetPositionsButton.clicked.connect(self.resetAllPositions)
@@ -51,7 +64,7 @@ class EventsWindow(QMainWindow):
         self.ui.addPresetButton.clicked.connect(self.addPresetToList)
 
         # Remove the selected channels from the list
-        self.ui.removePresetButton.clicked.connect(self.removePresetToList)
+        self.ui.removePresetButton.clicked.connect(self.removePresetFromList)
 
         # Construct events in the correct format
         self.ui.constructEventsButton.clicked.connect(self.constructFinalEvents)
@@ -63,23 +76,126 @@ class EventsWindow(QMainWindow):
         self.ui.closeWindowButton.clicked.connect(self.closeWindow)
 
     def addPresetToList(self, clicked):
-        print("Add preset to list")
+        currentPreset = self.ui.presets.currentText()
+        currentExposure = self.ui.exposure.text()
+        try:
+            intExposure = int(currentExposure)
+            self.ui.channelExposureList.addItem(currentPreset + " " + str(intExposure) + " ms")
+        except: 
+            msgBox = QMessageBox()
+            msgBox.setText("Exposure should be a number")
+            msgBox.exec()
 
-    def removePresetToList(self, clicked):
-        print("Remove preset from list")
+
+    def removePresetFromList(self, clicked):
+        selectedRow = self.ui.channelExposureList.currentRow()
+        selectedItem = self.ui.channelExposureList.takeItem(selectedRow)
+        del selectedItem
+
+    def timeIntervalChanged(self, timeIntervalValue):
+        self.minTimeInterval = timeIntervalValue
+    
+    def nTimePointsChanged(self, nTimePoints):
+        if nTimePoints >= 1:
+            self.nTimePoints = nTimePoints
+        else:
+            self.ui.nTimePointsSpinBox.setValue(1)
 
     def constructFinalEvents(self, clicked):
-        print("Construct final events pressed")
+
+        if not self.finalizedPositions:
+            msgBox = QMessageBox()
+            msgBox.setText("Positions not finalized. Add them and click Finalize Positions ..")
+            msgBox.exec()
+            return
+
+        nPositions = len(self.listFastPositions) + len(self.listSlowPositions)
+
+        allPositions = self.listFastPositions + self.listSlowPositions
+
+        allPositions.sort(key = lambda x: int(x[3:]))
+        #print(allPositions)
+        nPresets = self.ui.channelExposureList.count()
+
+
+        if nPresets == 0:
+            msgBox = QMessageBox()
+            msgBox.setText("Presets are not set.. So, events are not created")
+            msgBox.exec()
+            return
+
+        presetExposureDict = OrderedDict()
+        for i in range(nPresets):
+            presetAndExposure = self.ui.channelExposureList.item(i).text()
+            preset = presetAndExposure.split(" ")[0]
+            exposure = int(presetAndExposure.split(" ")[1])
+            presetExposureDict[preset] = exposure
+
+        print(presetExposureDict)
+        if list(presetExposureDict.items())[0][0] != "phase":
+            dlg = QMessageBox()
+            dlg.setWindowTitle("Please confirm !!!")
+            dlg.setText(f"First preset is not phase .. Fast and slow movements will be diabled by default")
+            dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            dlg.setIcon(QMessageBox.Question)
+            button = dlg.exec()
+
+            if button == QMessageBox.No:
+                msg = QMessageBox()
+                msg.setText("Event creation terminated")
+                msg.exec()
+
+
+        # for each position construct the events based on the channels
+        # added in the presets
+        for timePoint in range(self.nTimePoints):
+            for i, position in enumerate(self.positionsData, 0):
+                # iterate through the presets as well and add them
+                for preset, exposure in presetExposureDict.items():
+                    event = {}
+                    event['axes'] = {'time': timePoint, 'position': i}
+                    event['min_start_time'] = 0 + (timePoint) * self.minTimeInterval
+                    event['x'] = self.positionsData[position]['x_coordinate']
+                    event['y'] = self.positionsData[position]['y_coordinate']
+                    event['z'] = self.positionsData[position]['pfs_offset']
+
+                    # check if position is fast or slow and
+                    # add appropriate presets
+                    if position in self.listSlowPositions:
+                        if preset == "phase":
+                            #print(f"{position} is slow so adding slow presets")
+                            event['channel'] = {'group': 'image', 'config': preset + "Slow"}
+                        else:
+                            event['channel'] = {'group': 'image', 'config': preset}
+
+                    else:
+                        if preset == "phase":
+                            #print(f"{position} is fast so adding fast presets")
+                            event['channel'] = {'group': 'image', 'config': preset + "Fast"}
+                        else:
+                            event['channel'] = {'group': 'image', 'config': preset}
+                    event['exposure'] = exposure
+                    print(event)
+                    self.finalEvents.append(event)
+                    print("-----")
+        # Events have been created
+        self.finalizedEvents = True
+
 
     def resetFinalEvents(self, clicked):
-        print("Reset events pressed")
+        self.finalEvents = []
+        self.finalizedEvents = False
+        msg = QMessageBox()
+        msg.setText("Events have been reset .. Set Events again")
+        msg.exec()
 
     def closeWindow(self, clicked):
-        print("Window Closed Pressed")
+        # This will close the window
+        self.close()
     
     def setFastPositionsDefault(self, clicked):
-        positions = getPositionList()
-        for position in positions:
+        self.positionsData = getPositionList()
+        for position in self.positionsData:
             self.ui.fastPositions.addItem(position)
     
     def setFinalPositions(self, clicked):
@@ -132,12 +248,13 @@ class EventsWindow(QMainWindow):
 
 
 def getPositionList():
-    positions = []
+    positions = {}
     for i in range(20):
-        positions.append('Pos' + str(i))
+        positions['Pos' + str(i)] = {'x_coordinate':0, 'y_coordinate': 0, 'pfs_offset': 0}
     return positions
 
-
+def getMicroManagerPresets():
+    return ["phase", "alexa488", "cy5", "cy3", "texasred"]
     
 
 if __name__ == "__main__":

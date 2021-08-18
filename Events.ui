@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>290</y>
+      <y>270</y>
       <width>356</width>
       <height>80</height>
      </rect>
@@ -77,9 +77,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>390</y>
-      <width>611</width>
-      <height>201</height>
+      <y>370</y>
+      <width>621</width>
+      <height>251</height>
      </rect>
     </property>
     <property name="title">
@@ -88,8 +88,8 @@
     <widget class="QWidget" name="horizontalLayoutWidget_3">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>150</y>
+       <x>10</x>
+       <y>190</y>
        <width>281</width>
        <height>41</height>
       </rect>
@@ -124,10 +124,10 @@
     <widget class="QWidget" name="formLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>40</y>
-       <width>271</width>
-       <height>91</height>
+       <x>10</x>
+       <y>30</y>
+       <width>311</width>
+       <height>141</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="channelExposureLayout">
@@ -144,14 +144,58 @@
       <item row="1" column="0">
        <widget class="QLabel" name="exposureLabel">
         <property name="text">
-         <string>Exposure(ms)</string>
+         <string>Exposure(ms):</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="exposure"/>
       </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="timeIntervalLabel">
+        <property name="text">
+         <string>Time Interval(s)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="minTimeIntervalSpinBox">
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="nTimePointsLabel">
+        <property name="text">
+         <string>No of TimePoints</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QSpinBox" name="nTimePointsSpinBox">
+        <property name="maximum">
+         <number>500</number>
+        </property>
+        <property name="value">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
      </layout>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>200</y>
+       <width>231</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Always add phase preset First</string>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget_2">
@@ -194,7 +238,7 @@
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>610</y>
+      <y>640</y>
       <width>318</width>
       <height>51</height>
      </rect>
