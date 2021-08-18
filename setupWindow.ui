@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>614</width>
-    <height>796</height>
+    <width>615</width>
+    <height>814</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>SetupWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="exptSetupBox">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -35,16 +35,16 @@
        <height>41</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <layout class="QHBoxLayout" name="exptNoLayout">
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="exptNoLabel">
         <property name="text">
          <string>Experiment No:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit">
+       <widget class="QLineEdit" name="exptNoText">
         <property name="text">
          <string>EXP-21-BP000</string>
         </property>
@@ -61,23 +61,23 @@
        <height>41</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <layout class="QHBoxLayout" name="positionsInputLayout">
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="positionsInputLabel">
         <property name="text">
          <string>Positions:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_3">
+       <widget class="QRadioButton" name="fromFile">
         <property name="text">
          <string>File</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_4">
+       <widget class="QRadioButton" name="fromMicroManager">
         <property name="text">
          <string>Micromanager</string>
         </property>
@@ -94,16 +94,16 @@
        <height>41</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <layout class="QHBoxLayout" name="fileSelectionLayout">
       <item>
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="fileSelectionLabel">
         <property name="text">
          <string>If File Select File:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_4">
+       <widget class="QPushButton" name="fileSelectionButton">
         <property name="text">
          <string>Select File</string>
         </property>
@@ -120,16 +120,16 @@
        <height>41</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <layout class="QHBoxLayout" name="eventsCreationLayout">
       <item>
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="eventsCreationLabel">
         <property name="text">
          <string>Events Creation:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="eventsCreationButton">
         <property name="text">
          <string>Create Events</string>
         </property>
@@ -138,11 +138,11 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_2">
+   <widget class="QGroupBox" name="analysisSetupBox">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>230</y>
+      <y>260</y>
       <width>541</width>
       <height>441</height>
      </rect>
@@ -183,7 +183,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QGroupBox" name="groupBox_3">
+    <widget class="QGroupBox" name="databaseTablesBox">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -195,7 +195,7 @@
      <property name="title">
       <string>Database Tables</string>
      </property>
-     <widget class="QCheckBox" name="checkBox_2">
+     <widget class="QCheckBox" name="acquiredCheck">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -208,7 +208,7 @@
        <string>Acquired</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox_3">
+     <widget class="QCheckBox" name="segCellsChannelsCheck">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -221,7 +221,7 @@
        <string>Seg Cells and Channel Detection</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox_4">
+     <widget class="QCheckBox" name="deadAliveCheck">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -234,7 +234,7 @@
        <string>DeadAlive</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox_5">
+     <widget class="QCheckBox" name="growthRatesCheck">
       <property name="geometry">
        <rect>
         <x>120</x>
@@ -298,7 +298,7 @@
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>700</y>
+      <y>710</y>
       <width>221</width>
       <height>51</height>
      </rect>
@@ -327,7 +327,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>614</width>
+     <width>615</width>
      <height>21</height>
     </rect>
    </property>
