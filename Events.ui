@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>729</height>
+    <width>685</width>
+    <height>733</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,12 +19,12 @@
      <rect>
       <x>30</x>
       <y>20</y>
-      <width>211</width>
+      <width>171</width>
       <height>19</height>
      </rect>
     </property>
     <property name="text">
-     <string>Fast Positions</string>
+     <string>Fast Positions in Phase</string>
     </property>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget">
@@ -38,21 +38,21 @@
     </property>
     <layout class="QHBoxLayout" name="positionsButtonsLayout">
      <item>
-      <widget class="QPushButton" name="getPositions">
+      <widget class="QPushButton" name="getPositionsButton">
        <property name="text">
         <string>Get Positions</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="finalizePositions">
+      <widget class="QPushButton" name="finalizePositionsButton">
        <property name="text">
         <string>Finalize Positions</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="resetPositions">
+      <widget class="QPushButton" name="resetPositionsButton">
        <property name="text">
         <string>Reset Positions</string>
        </property>
@@ -65,26 +65,94 @@
      <rect>
       <x>390</x>
       <y>20</y>
-      <width>111</width>
+      <width>171</width>
       <height>19</height>
      </rect>
     </property>
     <property name="text">
-     <string>Slow Positions</string>
+     <string>Slow Positions in Phase</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="presetsBox">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>400</y>
-      <width>491</width>
-      <height>131</height>
+      <y>390</y>
+      <width>611</width>
+      <height>201</height>
      </rect>
     </property>
     <property name="title">
      <string>Presets and Channels</string>
     </property>
+    <widget class="QWidget" name="horizontalLayoutWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>150</y>
+       <width>281</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="presetsLayout">
+      <item>
+       <widget class="QPushButton" name="addPresetButton">
+        <property name="text">
+         <string>Add</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="removePresetButton">
+        <property name="text">
+         <string>Remove</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QListWidget" name="channelExposureList">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>20</y>
+       <width>231</width>
+       <height>171</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QWidget" name="formLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>40</y>
+       <width>271</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <layout class="QFormLayout" name="channelExposureLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="channelLabel">
+        <property name="text">
+         <string>Channel:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="presets"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="exposureLabel">
+        <property name="text">
+         <string>Exposure(ms)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="exposure"/>
+      </item>
+     </layout>
+    </widget>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
@@ -102,14 +170,14 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QPushButton" name="sendToSlow">
+        <widget class="QPushButton" name="sendToSlowButton">
          <property name="text">
           <string>&gt;</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="sendToFast">
+        <widget class="QPushButton" name="sendToFastButton">
          <property name="text">
           <string>&lt;</string>
          </property>
@@ -122,13 +190,46 @@
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_4">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>610</y>
+      <width>318</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="eventButtonsLayout">
+     <item>
+      <widget class="QPushButton" name="constructEventsButton">
+       <property name="text">
+        <string>Construct Events</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="resetEventsButton">
+       <property name="text">
+        <string>Reset Events</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="closeWindowButton">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>709</width>
+     <width>685</width>
      <height>21</height>
     </rect>
    </property>

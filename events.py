@@ -11,6 +11,7 @@ class EventsWindow(QMainWindow):
         super(EventsWindow, self).__init__()
         self.ui = Ui_EventsWindow()
         self.ui.setupUi(self)
+        self.setWindowTitle("Events Creation Window")
 
 
         # enable sorting in the lists of positions
@@ -20,26 +21,61 @@ class EventsWindow(QMainWindow):
         # set button handlers
         self.setupButtonHandlers()
 
+        # set channel presets
+        
+        
+
         self.finalizedPositions = False
         self.listFastPositions = []
         self.listSlowPositions = []
 
+
     def setupButtonHandlers(self):
         # By default get positions will fill in all the positions in Fast
-        self.ui.getPositions.clicked.connect(self.setFastPositionsDefault)
+        self.ui.getPositionsButton.clicked.connect(self.setFastPositionsDefault)
 
         # Finalize positions will get final positions for both slow and fast
-        self.ui.finalizePositions.clicked.connect(self.setFinalPositions)
+        self.ui.finalizePositionsButton.clicked.connect(self.setFinalPositions)
 
 
         # Reset all positions and clean up
-        self.ui.resetPositions.clicked.connect(self.resetAllPositions)
+        self.ui.resetPositionsButton.clicked.connect(self.resetAllPositions)
 
         # move from fast to slow
-        self.ui.sendToSlow.clicked.connect(self.moveToSlow)
+        self.ui.sendToSlowButton.clicked.connect(self.moveToSlow)
 
         # move from slow to fast
-        self.ui.sendToFast.clicked.connect(self.moveToFast)
+        self.ui.sendToFastButton.clicked.connect(self.moveToFast)
+
+        # Add channel and exposure times to the list 
+        self.ui.addPresetButton.clicked.connect(self.addPresetToList)
+
+        # Remove the selected channels from the list
+        self.ui.removePresetButton.clicked.connect(self.removePresetToList)
+
+        # Construct events in the correct format
+        self.ui.constructEventsButton.clicked.connect(self.constructFinalEvents)
+
+        # Reset events
+        self.ui.resetEventsButton.clicked.connect(self.resetFinalEvents)
+
+        # Close window and clean up correctly
+        self.ui.closeWindowButton.clicked.connect(self.closeWindow)
+
+    def addPresetToList(self, clicked):
+        print("Add preset to list")
+
+    def removePresetToList(self, clicked):
+        print("Remove preset from list")
+
+    def constructFinalEvents(self, clicked):
+        print("Construct final events pressed")
+
+    def resetFinalEvents(self, clicked):
+        print("Reset events pressed")
+
+    def closeWindow(self, clicked):
+        print("Window Closed Pressed")
     
     def setFastPositionsDefault(self, clicked):
         positions = getPositionList()
@@ -73,7 +109,14 @@ class EventsWindow(QMainWindow):
         
 
     def resetAllPositions(self, clicked):
-        print("Resetting all positions ... ")
+        self.ui.fastPositions.clear()
+        self.ui.slowPositions.clear()
+        self.finalizedPositions = False
+        self.listFastPositions = []
+        self.listSlowPositions = []
+        msgBox = QMessageBox()
+        msgBox.setText("All positions cleared. Reload positions")
+        msgBox.exec()
 
     def moveToFast(self, clicked):
         selectedRow = self.ui.slowPositions.currentRow()
@@ -84,7 +127,8 @@ class EventsWindow(QMainWindow):
         selectedRow = self.ui.fastPositions.currentRow()
         selectedPosition = self.ui.fastPositions.takeItem(selectedRow)
         self.ui.slowPositions.addItem(selectedPosition)
-        
+
+
 
 
 def getPositionList():
@@ -92,6 +136,8 @@ def getPositionList():
     for i in range(20):
         positions.append('Pos' + str(i))
     return positions
+
+
     
 
 if __name__ == "__main__":
