@@ -4,9 +4,12 @@ from collections import OrderedDict
 import sys
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PySide6.QtCore import Signal
 from ui_eventswindow import Ui_EventsWindow
 
 class EventsWindow(QMainWindow):
+
+    eventsCreated = Signal(list)
 
     def __init__(self):
         super(EventsWindow, self).__init__()
@@ -180,7 +183,7 @@ class EventsWindow(QMainWindow):
                     print("-----")
         # Events have been created
         self.finalizedEvents = True
-
+        self.eventsCreated.emit(self.finalEvents)
 
     def resetFinalEvents(self, clicked):
         self.finalEvents = []
@@ -222,7 +225,6 @@ class EventsWindow(QMainWindow):
             msgBox.setText("You finalized positions previously.. Try resettting positons.")
             msgBox.exec()
 
-        
 
     def resetAllPositions(self, clicked):
         self.ui.fastPositions.clear()
@@ -244,9 +246,6 @@ class EventsWindow(QMainWindow):
         selectedPosition = self.ui.fastPositions.takeItem(selectedRow)
         self.ui.slowPositions.addItem(selectedPosition)
 
-
-
-
 def getPositionList():
     positions = {}
     for i in range(20):
@@ -261,6 +260,5 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     eventsWindow = EventsWindow()
     eventsWindow.show()
-
     sys.exit(app.exec())
 

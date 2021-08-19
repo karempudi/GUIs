@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>615</width>
-    <height>814</height>
+    <width>593</width>
+    <height>594</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,6 +50,20 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="exptNoSetButton">
+        <property name="text">
+         <string>Set</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="exptNoClearButton">
+        <property name="text">
+         <string>Clear</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
     <widget class="QWidget" name="horizontalLayoutWidget_4">
@@ -65,7 +79,7 @@
       <item>
        <widget class="QLabel" name="positionsInputLabel">
         <property name="text">
-         <string>Positions:</string>
+         <string>Get Positions from:</string>
         </property>
        </widget>
       </item>
@@ -73,6 +87,9 @@
        <widget class="QRadioButton" name="fromFile">
         <property name="text">
          <string>File</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -137,14 +154,27 @@
       </item>
      </layout>
     </widget>
+    <widget class="QPushButton" name="validateExptSetupButton">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>200</y>
+       <width>171</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Validate Experiment Setup</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="analysisSetupBox">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>260</y>
+      <y>250</y>
       <width>541</width>
-      <height>441</height>
+      <height>211</height>
      </rect>
     </property>
     <property name="title">
@@ -153,22 +183,22 @@
     <widget class="QWidget" name="horizontalLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>40</y>
        <width>431</width>
        <height>31</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="segmentationLayout">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="segmentationLabel">
         <property name="text">
          <string>Cell Segmentation: </string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox">
+       <widget class="QComboBox" name="selectNet">
         <item>
          <property name="text">
           <string>Normal U-net</string>
@@ -183,83 +213,18 @@
       </item>
      </layout>
     </widget>
-    <widget class="QGroupBox" name="databaseTablesBox">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>230</y>
-       <width>501</width>
-       <height>101</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Database Tables</string>
-     </property>
-     <widget class="QCheckBox" name="acquiredCheck">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>131</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Acquired</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="segCellsChannelsCheck">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>30</y>
-        <width>251</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Seg Cells and Channel Detection</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="deadAliveCheck">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>60</y>
-        <width>91</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>DeadAlive</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="growthRatesCheck">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>60</y>
-        <width>131</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>GrowthRates</string>
-      </property>
-     </widget>
-    </widget>
     <widget class="QWidget" name="horizontalLayoutWidget_7">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>80</y>
        <width>431</width>
        <height>31</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_7">
+     <layout class="QHBoxLayout" name="channelSegLayout">
       <item>
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="segChannels">
         <property name="text">
          <string>Channel Segmentation</string>
         </property>
@@ -270,22 +235,22 @@
     <widget class="QWidget" name="horizontalLayoutWidget_8">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>120</y>
        <width>431</width>
        <height>31</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_8">
+     <layout class="QHBoxLayout" name="cellAnalysisLayout">
       <item>
-       <widget class="QCheckBox" name="checkBox_6">
+       <widget class="QCheckBox" name="calcDeadAlive">
         <property name="text">
          <string>DeadAlive</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_7">
+       <widget class="QCheckBox" name="calcGrowthRates">
         <property name="text">
          <string>Growth Rates</string>
         </property>
@@ -293,26 +258,39 @@
       </item>
      </layout>
     </widget>
+    <widget class="QPushButton" name="validateAnalysisSetupButton">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>170</y>
+       <width>131</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Validate Analysis Setup</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>710</y>
+      <x>270</x>
+      <y>470</y>
       <width>221</width>
       <height>51</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="exptSaveCloseButtons">
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="saveExptSetupButton">
        <property name="text">
         <string>Save</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="closeExptSetupButton">
        <property name="text">
         <string>Close</string>
        </property>
@@ -327,7 +305,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>615</width>
+     <width>593</width>
      <height>21</height>
     </rect>
    </property>
