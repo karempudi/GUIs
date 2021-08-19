@@ -3,11 +3,18 @@ from pathlib import Path
 import sys
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
+from PySide6.QtCore import Signal
 from ui_exptsetupwindow import Ui_SetupWindow
 from events import EventsWindow
 
 
+
 class exptSetupWindow(QMainWindow):
+
+
+    # Emit when setup is done and handled in the
+    # parent window
+    setupDone = Signal(object)
 
     def __init__(self):
         super(exptSetupWindow, self).__init__()
@@ -42,7 +49,8 @@ class exptSetupWindow(QMainWindow):
     # Receiving events list from the create Events subwindow
     def receivedEvents(self, eventsList):
         self.events = eventsList
-        print(self.events)
+        self.eventsCreated = True
+        #print(self.events)
         print("Events received .... ")
     
     def setupButtonHandlers(self):
@@ -138,7 +146,32 @@ class exptSetupWindow(QMainWindow):
         self.eventsWindow.show()
     
     def validateExptSetup(self, clicked):
-        pass
+        # Open a window and then ask a question to accept or not  
+        if self.exptNo == None:
+            msg = QMessageBox()
+            msg.setText("Expt number not set")
+            msg.exec()
+            return
+        
+        if self.positionsFromFile == True and self.positionsFileName == None:
+            msg = QMessageBox()
+            msg.setText("Positions File name is not set")
+            msg.exec()
+            return
+        
+        # TODO: checking for micromanager option is done yet
+
+        if self.eventsCreated == False or self.events == None:
+            msg = QMessageBox()
+            msg.setText("Events not created")
+            msg.exec()
+            return
+        
+        self.exptSettingsValidated = True
+        msg = QMessageBox()
+        msg.setText("Experiment settings validated")
+        msg.exec()
+
     
     def validateAnalysisSetup(self, clicked):
         pass
