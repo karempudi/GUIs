@@ -40,6 +40,7 @@ class exptSetupWindow(QMainWindow):
         self.eventsCreated = False # Flag to know if events were created
         self.events = None # assign later when the events windows closes
         self.exptDir = '.'
+        self.exptSettings= {}
 
         # additional window references that are needed
         self.eventsWindow = EventsWindow()
@@ -52,6 +53,7 @@ class exptSetupWindow(QMainWindow):
         self.eventsCreated = True
         #print(self.events)
         print("Events received .... ")
+        print("Events in the main expt window are set ..")
     
     def setupButtonHandlers(self):
         
@@ -117,12 +119,14 @@ class exptSetupWindow(QMainWindow):
 
     def fileOptionClicked(self, clicked):
         self.positionsFromFile = self.ui.fromFile.isChecked()
-        #print(f"File option toggled {self.positionsFromFile}")
+        self.eventsWindow.usePositionsFile = self.positionsFromFile 
+        print(f"File option toggled {self.positionsFromFile}")
 
 
     def micromanagerOptionClicked(self, clicked):
         self.positionsFromFile = not self.ui.fromMicroManager.isChecked()
-        #print(f"Micromanger option toggled: {self.positionsFromFile}")
+        self.eventsWindow.usePositionsFile = self.positionsFromFile
+        print(f"Micromanger option toggled: {self.positionsFromFile}")
 
     def selectPositionsFile(self, clicked):
         if self.positionsFromFile == True:
@@ -132,6 +136,10 @@ class exptSetupWindow(QMainWindow):
             self.positionsFileName = filename[0]
             print(filename)
             print(f"Positions file set to {self.positionsFileName}")
+
+            # set positions filename so that positions can be picked up in
+            # that window
+            self.eventsWindow.positionsFileName = self.positionsFileName
             if self.positionsFileName == '':
                 self.positionsFileName = None
                 msg = QMessageBox()
@@ -150,12 +158,14 @@ class exptSetupWindow(QMainWindow):
         if self.exptNo == None:
             msg = QMessageBox()
             msg.setText("Expt number not set")
+            msg.setIcon(QMessageBox.Warning)
             msg.exec()
             return
         
         if self.positionsFromFile == True and self.positionsFileName == None:
             msg = QMessageBox()
-            msg.setText("Positions File name is not set")
+            msg.setText("Positions File name or micromanager option is not set")
+            msg.setIcon(QMessageBox.Critical)
             msg.exec()
             return
         
@@ -164,13 +174,23 @@ class exptSetupWindow(QMainWindow):
         if self.eventsCreated == False or self.events == None:
             msg = QMessageBox()
             msg.setText("Events not created")
+            msg.setIcon(QMessageBox.Critical)
             msg.exec()
             return
         
         self.exptSettingsValidated = True
+        # construct everything about experiment setup in a dictionary
+        # to be passsed around if needed in other places
+
+        self.exptSettings = {
+
+        }
+    
         msg = QMessageBox()
         msg.setText("Experiment settings validated")
+        msg.setIcon(QMessageBox.Information)
         msg.exec()
+
 
     
     def validateAnalysisSetup(self, clicked):

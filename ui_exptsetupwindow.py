@@ -17,7 +17,7 @@ class Ui_SetupWindow(object):
     def setupUi(self, SetupWindow):
         if not SetupWindow.objectName():
             SetupWindow.setObjectName(u"SetupWindow")
-        SetupWindow.resize(593, 594)
+        SetupWindow.resize(757, 760)
         self.centralwidget = QWidget(SetupWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.exptSetupBox = QGroupBox(self.centralwidget)
@@ -62,12 +62,16 @@ class Ui_SetupWindow(object):
 
         self.fromFile = QRadioButton(self.horizontalLayoutWidget_4)
         self.fromFile.setObjectName(u"fromFile")
-        self.fromFile.setChecked(True)
+        self.fromFile.setCheckable(True)
+        self.fromFile.setChecked(False)
 
         self.positionsInputLayout.addWidget(self.fromFile)
 
         self.fromMicroManager = QRadioButton(self.horizontalLayoutWidget_4)
         self.fromMicroManager.setObjectName(u"fromMicroManager")
+        self.fromMicroManager.setEnabled(True)
+        self.fromMicroManager.setCheckable(True)
+        self.fromMicroManager.setChecked(False)
 
         self.positionsInputLayout.addWidget(self.fromMicroManager)
 
@@ -179,7 +183,7 @@ class Ui_SetupWindow(object):
         SetupWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(SetupWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 593, 21))
+        self.menubar.setGeometry(QRect(0, 0, 757, 21))
         SetupWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(SetupWindow)

@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from collections import OrderedDict
 import sys
+from narsil.liverun.utils import parsePositionsFile
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PySide6.QtCore import Signal
@@ -17,6 +18,14 @@ class EventsWindow(QMainWindow):
         self.ui.setupUi(self)
         self.setWindowTitle("Events Creation Window")
 
+        # this value is set when the user successfully selects
+        # the a correct positions file
+        self.usePositionsFile = None
+        self.positionsFileName = None
+
+        # will set true if the positions are parsed correctly
+        # These positions will by default be loaded into fast postions side
+        self.parsedPositions = None
 
         # enable sorting in the lists of positions
         self.ui.fastPositions.setSortingEnabled(True)
@@ -197,7 +206,32 @@ class EventsWindow(QMainWindow):
         self.close()
     
     def setFastPositionsDefault(self, clicked):
-        self.positionsData = getPositionList()
+
+        # check if positions/micromanager file is not set
+        # then do some default positions for debugging the UI
+        if self.usePositionsFile is None:
+            print(f"Positions from file: {self.usePositionsFile}")
+            self.positionsData = getPositionList(None)
+            msg = QMessageBox()
+            msg.setText("Plese check the file option in Expt Setup Window")
+            msg.setIcon(QMessage.Information)
+            msg.exec()
+            return
+        # use the positoins file
+        elif self.usePositionsFile == True:
+            if self.positionsFileName == '' or self.positionsFileName is None:
+                msg = QMessageBox()
+                msg.setText("Select the positions file in the Expt Setup Window")
+                msg.setIcon(QMessageBox.Warning)
+                msg.exec()
+            print("Sending positions to parser .... ")
+            print(f"Positions from file: {self.usePositionsFile}")
+            self.positionsData = getPositionList(self.positionsFileName)
+        
+        elif self.usePositionsFile == False:
+            print(f"Positions from file: {self.usePositionsFile}")
+            self.positionsData = getPositionsMicroManager()
+
         for position in self.positionsData:
             self.ui.fastPositions.addItem(position)
     
@@ -246,11 +280,21 @@ class EventsWindow(QMainWindow):
         selectedPosition = self.ui.fastPositions.takeItem(selectedRow)
         self.ui.slowPositions.addItem(selectedPosition)
 
-def getPositionList():
-    positions = {}
-    for i in range(20):
-        positions['Pos' + str(i)] = {'x_coordinate':0, 'y_coordinate': 0, 'pfs_offset': 0}
-    return positions
+def getPositionList(filename=None):
+    # if the filename is None, then just load something for test purposes
+    if filename is None:
+        positions = {}
+        for i in range(20):
+            positions['Pos' + str(i)] = {'x_coordinate':0, 'y_coordinate': 0, 'pfs_offset': 0}
+        return positions
+    else:
+        positions = parsePositionsFile(filename)
+        return positions
+
+
+def getPositionsMicroManager():
+    # connect to micromanager and get positions
+    return None
 
 def getMicroManagerPresets():
     return ["phase", "alexa488", "cy5", "cy3", "texasred"]
