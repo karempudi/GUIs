@@ -39,7 +39,7 @@
       <string>Setup</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="viewButton">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -53,20 +53,20 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="viewerBox">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>440</y>
+      <y>430</y>
       <width>621</width>
-      <height>381</height>
+      <height>311</height>
      </rect>
     </property>
     <property name="title">
      <string>Viewer</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox_2">
+   <widget class="QGroupBox" name="runStatus">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -78,7 +78,7 @@
     <property name="title">
      <string>Experiment Status</string>
     </property>
-    <widget class="QGraphicsView" name="graphicsView">
+    <widget class="PlotWidget" name="imgArrivalPlot">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -88,7 +88,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="graphicsView_2">
+    <widget class="QGraphicsView" name="imgSegPlot">
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -98,7 +98,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="graphicsView_3">
+    <widget class="QGraphicsView" name="deadAlivePlot">
      <property name="geometry">
       <rect>
        <x>440</x>
@@ -108,7 +108,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="graphicsView_4">
+    <widget class="QGraphicsView" name="growthRatePlot">
      <property name="geometry">
       <rect>
        <x>650</x>
@@ -131,7 +131,7 @@
     <property name="title">
      <string>Controls</string>
     </property>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="stopExptButton">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -157,7 +157,7 @@
       <string>Start Expt</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_4">
+    <widget class="QPushButton" name="startAnalysisButton">
      <property name="geometry">
       <rect>
        <x>130</x>
@@ -223,13 +223,13 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_4">
+   <widget class="QGroupBox" name="statisticsBox">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>450</y>
-      <width>201</width>
-      <height>111</height>
+      <x>650</x>
+      <y>430</y>
+      <width>231</width>
+      <height>311</height>
      </rect>
     </property>
     <property name="title">
@@ -248,6 +248,19 @@
       <string>DeadAlive</string>
      </property>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="resetButton">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>760</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reset</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -274,6 +287,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -17,7 +17,7 @@ class Ui_SetupWindow(object):
     def setupUi(self, SetupWindow):
         if not SetupWindow.objectName():
             SetupWindow.setObjectName(u"SetupWindow")
-        SetupWindow.resize(757, 760)
+        SetupWindow.resize(594, 593)
         self.centralwidget = QWidget(SetupWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.exptSetupBox = QGroupBox(self.centralwidget)
@@ -183,7 +183,7 @@ class Ui_SetupWindow(object):
         SetupWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(SetupWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 757, 21))
+        self.menubar.setGeometry(QRect(0, 0, 594, 21))
         SetupWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(SetupWindow)
