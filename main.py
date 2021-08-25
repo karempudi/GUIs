@@ -9,6 +9,7 @@ from PySide6.QtCore import QFile, QIODevice, QTimer
 from PySide6.QtUiTools import QUiLoader
 from ui_mainwindow import Ui_MainWindow
 import pyqtgraph as pg
+import psycopg2 as pgdatabase
 
 class MainWindow(QMainWindow):
 
@@ -34,7 +35,7 @@ class MainWindow(QMainWindow):
         self.x = [1.0, 2.0, 3.0]
         self.y = [10.0, 232.0, 1231.0]
         self.ui.imgArrivalPlot.setBackground('w')
-        self.pen = pg.mkPen(color=(0, 0, 0))
+        self.pen = pg.mkPen(color=(0, 0, 255))
         self.data_line = self.ui.imgArrivalPlot.plot(self.x, self.y, pen=self.pen)
 
     def updateRunStatus(self):
@@ -45,6 +46,70 @@ class MainWindow(QMainWindow):
         self.y[2]  -= 100
         self.data_line.setData(self.x, self.y)
 
+
+# Function will create a new database that will contain all tables 
+# used/created in one experiment
+def createExptDatabase(dbname, dbuser='postgres', dbpassword='postgres'):
+    pass
+    
+# Create all the tables needed for the experiment, based on the options selected
+def createTablesAnalysis(tables=['arrival', 'segmented', 'deadAlive', 'growth'],
+                     dbname=None, dbuser='postgres', dbpassword='postgres'):
+    
+    con = None
+
+    try:
+        con = pgdatabase.connect(database=dbname, user=dbuser, password=dbpassword)
+        cur = con.cursor()
+
+        # commit to database immediately
+        con.autocommit=True
+        # loop over and check if tables exist and clean them up
+        cur.execute("""SELECT table_name FROM information_schema.tables
+                    WHERE table_schema = 'public'""")
+        
+        rows = cur.fetchall()
+        for row in rows:
+            if row in tables:
+                cur.execute("DROP TABLE IF EXISTS (%s)", (row,))
+        
+        print(f"Cleaned up all of the {tables} to start experiment afresh ... ")
+
+        for table in tables:
+            if table == 'arrival':
+                cur.execute("""CREATE TABLE arrival 
+                        (id SERIAL PRIMARY KEY, time TIMESTAMP, position INT, timepoint INT)
+                        """)
+            elif table == 'segmented':
+                cur.execute("""CREATE TABLE segmented
+                        (id SERIAL PRIMARY KEY, time TIMESTAMP, position INT,
+                        segmentedImagePath VARCHAR, rawImagePath VARCHAR, locations BYTEA)
+                        """)
+            
+            elif table == 'deadAlive':
+                cur.execute("""CREATE TABLE deadAlive
+                        (id SERIAL PRIMARY KEY, time TIMESTAMP, position INT,
+                        channelNumber INT, status BYTEA)
+                        """)
+    except pg.DatabaseError as e:
+        print(f"Error: {e}")
+        msg = QMessageBox()
+        msg.setText(f"Database creation error {e}")
+        msg.setIcon(QMessageBox.Warning)
+        msg.exec()
+    
+    finally:
+        if con:
+            con.close()
+
+# Clean up all the tables used in the experiment and drop the data, use this
+# only in cases where you prematurely start and experiment
+def cleanTablesAnalysis():
+    pass
+
+# Used only in debug mode to delete the database of a particular experiment
+def cleanExptDatabase():
+    pass
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
