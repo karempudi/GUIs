@@ -183,17 +183,17 @@
       <string>Stop Analysis</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_6">
+    <widget class="QPushButton" name="createDbButton">
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>260</x>
        <y>30</y>
        <width>121</width>
        <height>27</height>
       </rect>
      </property>
      <property name="text">
-      <string>Clear database</string>
+      <string>Create database</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_8">
@@ -222,6 +222,19 @@
       <string>Tweeze Position</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="createTablesButton">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>80</y>
+       <width>111</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Create tables</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="statisticsBox">
     <property name="geometry">
@@ -235,7 +248,7 @@
     <property name="title">
      <string>Statistics</string>
     </property>
-    <widget class="QPushButton" name="pushButton_7">
+    <widget class="QPushButton" name="deadAliveStatsButton">
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -246,6 +259,19 @@
      </property>
      <property name="text">
       <string>DeadAlive</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="fillRateButton">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>70</y>
+       <width>88</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Fill Rate</string>
      </property>
     </widget>
    </widget>

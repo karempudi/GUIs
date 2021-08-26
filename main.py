@@ -4,12 +4,13 @@ from pathlib import Path
 import sys
 import numpy as np
 
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PySide6.QtCore import QFile, QIODevice, QTimer
 from PySide6.QtUiTools import QUiLoader
 from ui_mainwindow import Ui_MainWindow
 import pyqtgraph as pg
 import psycopg2 as pgdatabase
+from datetime import datetime
 
 class MainWindow(QMainWindow):
 
@@ -17,6 +18,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
 
 
         # timing of the experimental status plots
@@ -27,8 +29,13 @@ class MainWindow(QMainWindow):
 
         self.showExptStatus()
 
+        self.setupButtonHandlers()
+
+
     def setupButtonHandlers(self):
-        pass
+        exptname = 'expt21test'
+        self.ui.createDbButton.clicked.connect(lambda: createExptDatabase(exptname))
+        self.ui.createTablesButton.clicked.connect(lambda: createTablesAnalysis(dbname=exptname))
 
     # Used to plot the experimental graphics
     def showExptStatus(self):
@@ -50,10 +57,43 @@ class MainWindow(QMainWindow):
 # Function will create a new database that will contain all tables 
 # used/created in one experiment
 def createExptDatabase(dbname, dbuser='postgres', dbpassword='postgres'):
-    pass
+    con = None
+    try:
+        con = pgdatabase.connect(user=dbuser, password=dbpassword)
+        cur = con.cursor()
+        con.autocommit=True
+
+        # check if there is a database named with the experiment
+        # if not then create it
+        cur.execute("""SELECT datname FROM pg_database""")
+        rows = cur.fetchall()
+        exptdatabaseExists = False
+        for row in rows:
+            if row[0] == dbname:
+                exptdatabaseExists = True
     
-# Create all the tables needed for the experiment, based on the options selected
-def createTablesAnalysis(tables=['arrival', 'segmented', 'deadAlive', 'growth'],
+        if exptdatabaseExists == True:
+            msg=QMessageBox()
+            msg.setText("Experiment already exists in database ...")
+            msg.setIcon(QMessageBox.Warning)
+            msg.exec()
+        else:
+            cur.execute("CREATE DATABASE " + str(dbname))
+            print(f"Creating database for the current experiment with name: {dbname}")
+    except pgdatabase.DatabaseError as e:
+        print(f"Error: {e}")
+        msg.QMessageBox()
+        msg.setText(f"Expt database creation error {e}")
+        msg.setIcon(QMessageBox.warning)
+        msg.exec()
+    
+    finally:
+        if con:
+            con.close()
+
+    
+    # Create all the tables needed for the experiment, based on the options selected
+def createTablesAnalysis(tables=['arrival', 'segmented', 'deadalive', 'growth'],
                      dbname=None, dbuser='postgres', dbpassword='postgres'):
     
     con = None
@@ -69,13 +109,15 @@ def createTablesAnalysis(tables=['arrival', 'segmented', 'deadAlive', 'growth'],
                     WHERE table_schema = 'public'""")
         
         rows = cur.fetchall()
+        print(rows)
         for row in rows:
-            if row in tables:
-                cur.execute("DROP TABLE IF EXISTS (%s)", (row,))
+            if row[0] in tables:
+                cur.execute("DROP TABLE IF EXISTS " + str(row[0]))
         
         print(f"Cleaned up all of the {tables} to start experiment afresh ... ")
 
         for table in tables:
+            print(f"Table {table} is being created ....")
             if table == 'arrival':
                 cur.execute("""CREATE TABLE arrival 
                         (id SERIAL PRIMARY KEY, time TIMESTAMP, position INT, timepoint INT)
@@ -86,15 +128,15 @@ def createTablesAnalysis(tables=['arrival', 'segmented', 'deadAlive', 'growth'],
                         segmentedImagePath VARCHAR, rawImagePath VARCHAR, locations BYTEA)
                         """)
             
-            elif table == 'deadAlive':
-                cur.execute("""CREATE TABLE deadAlive
+            elif table == 'deadalive':
+                cur.execute("""CREATE TABLE deadalive
                         (id SERIAL PRIMARY KEY, time TIMESTAMP, position INT,
                         channelNumber INT, status BYTEA)
                         """)
-    except pg.DatabaseError as e:
+    except pgdatabase.DatabaseError as e:
         print(f"Error: {e}")
         msg = QMessageBox()
-        msg.setText(f"Database creation error {e}")
+        msg.setText(f"Database tables creation error {e}")
         msg.setIcon(QMessageBox.Warning)
         msg.exec()
     
