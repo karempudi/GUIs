@@ -78,7 +78,7 @@
     <property name="title">
      <string>Experiment Status</string>
     </property>
-    <widget class="PlotWidget" name="imgArrivalPlot">
+    <widget class="ImageView" name="imgArrivalPlot">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -315,7 +315,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PlotWidget</class>
+   <class>ImageView</class>
    <extends>QGraphicsView</extends>
    <header>pyqtgraph</header>
   </customwidget>

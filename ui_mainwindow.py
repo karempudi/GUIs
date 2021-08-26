@@ -12,7 +12,7 @@ from PySide6.QtCore import *  # type: ignore
 from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
 
-from pyqtgraph import PlotWidget
+from pyqtgraph import ImageView
 
 
 class Ui_MainWindow(object):
@@ -37,7 +37,7 @@ class Ui_MainWindow(object):
         self.runStatus = QGroupBox(self.centralwidget)
         self.runStatus.setObjectName(u"runStatus")
         self.runStatus.setGeometry(QRect(20, 180, 861, 241))
-        self.imgArrivalPlot = PlotWidget(self.runStatus)
+        self.imgArrivalPlot = ImageView(self.runStatus)
         self.imgArrivalPlot.setObjectName(u"imgArrivalPlot")
         self.imgArrivalPlot.setGeometry(QRect(20, 30, 181, 181))
         self.imgSegPlot = QGraphicsView(self.runStatus)
