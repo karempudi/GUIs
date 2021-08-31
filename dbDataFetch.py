@@ -117,7 +117,6 @@ def cleanTablesAnalysis(tables=['arrival', 'segmented', 'deadalive', 'growth'],
         if con:
             con.close()
 
-    
 
 # Used only in debug mode to delete the database of a particular experiment
 def cleanExptDatabase():
