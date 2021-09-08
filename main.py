@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PySide6.QtCore import QFile, QIODevice, QTimer
 from PySide6.QtUiTools import QUiLoader
 from ui_mainwindow import Ui_MainWindow
+from exptSetup import ExptSetupWindow
 import pyqtgraph as pg
 import psycopg2 as pgdatabase
 from datetime import datetime
@@ -20,8 +21,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
-
+        self.setWindowTitle("Main Window")
 
         # timing of the experimental status plots
         self.timer = QTimer()
@@ -33,11 +33,35 @@ class MainWindow(QMainWindow):
 
         self.setupButtonHandlers()
 
+        # window for setup
+        self.setupWindow =  ExptSetupWindow()
+        self.setupWindow.setupDone.connect(self.receivedExptSetup)
+        self.setupWindow.analysisSetupDone.connect(self.receivedAnalysisSetup)
+
+    def receivedExptSetup(self, exptSettings):
+        pass
+
+    def receivedAnalysisSetup(self, expt):
+        pass
 
     def setupButtonHandlers(self):
         exptname = 'expt21test'
         self.ui.createDbButton.clicked.connect(lambda: createExptDatabase(exptname))
         self.ui.createTablesButton.clicked.connect(lambda: createTablesAnalysis(dbname=exptname))
+
+
+        # setup button handler
+        self.ui.setupButton.clicked.connect(self.showSetupWindow)
+        # view setup 
+        self.ui.viewExptSetupButton.clicked.connect(self.viewSetup)
+
+
+    def showSetupWindow(self):
+        self.setupWindow.show()
+
+    def viewSetup(self):
+        pass
+
 
     # Used to plot the experimental graphics
     def showExptStatus(self):

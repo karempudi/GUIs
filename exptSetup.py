@@ -3,21 +3,24 @@ from pathlib import Path
 import sys
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, Qt
 from ui_exptsetupwindow import Ui_SetupWindow
 from events import EventsWindow
 
 
 
-class exptSetupWindow(QMainWindow):
+class ExptSetupWindow(QMainWindow):
 
 
     # Emit when setup is done and handled in the
     # parent window
-    setupDone = Signal(object)
+    setupDone = Signal(dict)
+
+    # analysis setup done, emit when setup is done
+    analysisSetupDone = Signal(dict)
 
     def __init__(self):
-        super(exptSetupWindow, self).__init__()
+        super(ExptSetupWindow, self).__init__()
         self.ui = Ui_SetupWindow()
         self.ui.setupUi(self)
         self.setWindowTitle("Experiment Setup Window")
@@ -46,6 +49,10 @@ class exptSetupWindow(QMainWindow):
         self.eventsWindow = EventsWindow()
         self.eventsWindow.eventsCreated.connect(self.receivedEvents)
 
+        # analysis setting that need to be stored
+        self.analysisSettings = {"cellNet": "normal", 
+                    "channelSeg": None, "deadAlive": None, "growthRates": None}
+
     
     # Receiving events list from the create Events subwindow
     def receivedEvents(self, eventsList):
@@ -53,7 +60,7 @@ class exptSetupWindow(QMainWindow):
         self.eventsCreated = True
         #print(self.events)
         print("Events received .... ")
-        print("Events in the main expt window are set ..")
+        print("Events in the setup window are set ..")
     
     def setupButtonHandlers(self):
         
@@ -81,15 +88,12 @@ class exptSetupWindow(QMainWindow):
         #########################################################
         ############## Analysis Setup Buttons ###################
         #########################################################
-        
-        # cell segmentaiton network selection
-
         # checkbox for channel segmentation
-
+        self.ui.segChannels.stateChanged.connect(self.setChannelSegmentation)
         # deadAlive for rudimentary tracking
-
+        self.ui.calcDeadAlive.stateChanged.connect(self.setDeadAlive)
         # Growth Rates for full blown analysis
-
+        self.ui.calcGrowthRates.stateChanged.connect(self.setGrowthRates)
         # validate analysis setup
         self.ui.validateAnalysisSetupButton.clicked.connect(self.validateAnalysisSetup)
 
@@ -150,6 +154,8 @@ class exptSetupWindow(QMainWindow):
             msg.setText("Positions are coming from Micromanager directly")
             msg.exec()
         
+    # Window gets created in the initialization
+    # you just show it
     def createEvents(self, clicked):
         self.eventsWindow.show()
     
@@ -170,6 +176,12 @@ class exptSetupWindow(QMainWindow):
             return
         
         # TODO: checking for micromanager option is done yet
+        if self.positionsFromFile == False and self.eventsCreated == False:
+            msg = QMessageBox()
+            msg.setText("Micromanager events are not created ..")
+            msg.setIcon(QMessageBox.Critical)
+            msg.exec()
+            return
 
         if self.eventsCreated == False or self.events == None:
             msg = QMessageBox()
@@ -183,8 +195,12 @@ class exptSetupWindow(QMainWindow):
         # to be passsed around if needed in other places
 
         self.exptSettings = {
-
+            "events": self.events,
+            "exptNo": self.exptNo,
+            "positionsFileName": self.positionsFileName,
+            "posFromFile": self.positionsFromFile
         }
+        self.setupDone.emit(self.exptSettings)
     
         msg = QMessageBox()
         msg.setText("Experiment settings validated")
@@ -192,12 +208,65 @@ class exptSetupWindow(QMainWindow):
         msg.exec()
 
 
+    def setChannelSegmentation(self, s):
+        self.analysisSettingsValidated = False
+        if s == Qt.Checked:
+            self.analysisSettings["channelSeg"] = True
+        elif s == Qt.Unchecked:
+            self.analysisSettings["channelSeg"] = None
+
+
+    def setDeadAlive(self, s):
+        self.analysisSettingsValidated = False
+        if s == Qt.Checked:
+            self.analysisSettings["deadAlive"] = True
+        elif s == Qt.Unchekced:
+            self.analysisSettings["deadAlive"] = None
+    
+    def setGrowthRates(self, s):
+        self.analysisSettingsValidated = False
+        if s == Qt.Checked:
+            self.analysisSettings["growthRates"] = True
+        elif s == Qt.Unchecked:
+            self.analysisSettings["growthRates"] = None
     
     def validateAnalysisSetup(self, clicked):
-        pass
+        if self.exptSettingsValidated != True:
+            msg = QMessageBox()
+            msg.setText("Experimental setup not completed !!! Do it first")
+            msg.setIcon(QMessageBox.Warning)
+            msg.exec()
+            return
+        
+        if self.analysisSettings["channelSeg"] == None:
+            msg = QMessageBox()
+            msg.setText("Channel Segmentation will not be done ...")
+            msg.setIcon(QMessageBox.Information)
+            msg.exec()
+        
+        if self.analysisSettings["deadAlive"] == None:
+            msg = QMessageBox()
+            msg.setText("Dead Alive calcultations will not be done ...")
+            msg.setIcon(QMessageBox.Information)
+            msg.exec()
+        
+        if self.analysisSettings["growthRates"] == None:
+            msg = QMessageBox()
+            msg.setText("Growth Rates calcultations will not be done ...")
+            msg.setIcon(QMessageBox.Information)
+            msg.exec()
+
+        self.analysisSettingsValidated = True
+        self.analysisSetupDone.emit(self.analysisSettings)
+        
+        msg = QMessageBox()
+        msg.setText("Analysis settings done")
+        msg.setIcon(QMessageBox.Information)
+        msg.exec()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    exptWindow = exptSetupWindow()
+    exptWindow = ExptSetupWindow()
     exptWindow.show()
     sys.exit(app.exec())

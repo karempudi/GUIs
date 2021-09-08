@@ -214,7 +214,7 @@ class EventsWindow(QMainWindow):
             self.positionsData = getPositionList(None)
             msg = QMessageBox()
             msg.setText("Plese check the file option in Expt Setup Window")
-            msg.setIcon(QMessage.Information)
+            msg.setIcon(QMessageBox.Information)
             msg.exec()
             return
         # use the positoins file
