@@ -8,11 +8,11 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PySide6.QtCore import QFile, QIODevice, QTimer
 from PySide6.QtUiTools import QUiLoader
 from ui_mainwindow import Ui_MainWindow
+from ui_viewsetup import Ui_viewWindow
 from exptSetup import ExptSetupWindow
 import pyqtgraph as pg
 import psycopg2 as pgdatabase
 from datetime import datetime
-
 
 
 class MainWindow(QMainWindow):
@@ -29,8 +29,12 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.updateRunStatus)
         self.timer.start()
 
-        self.showExptStatus()
 
+        # expt and analysis objects
+        self.exptSetupSettings = None
+        self.analysisSetupSettings = None
+
+        # setup all the handlers for buttons
         self.setupButtonHandlers()
 
         # window for setup
@@ -38,30 +42,49 @@ class MainWindow(QMainWindow):
         self.setupWindow.setupDone.connect(self.receivedExptSetup)
         self.setupWindow.analysisSetupDone.connect(self.receivedAnalysisSetup)
 
-    def receivedExptSetup(self, exptSettings):
-        pass
-
-    def receivedAnalysisSetup(self, expt):
-        pass
 
     def setupButtonHandlers(self):
         exptname = 'expt21test'
         self.ui.createDbButton.clicked.connect(lambda: createExptDatabase(exptname))
         self.ui.createTablesButton.clicked.connect(lambda: createTablesAnalysis(dbname=exptname))
 
-
         # setup button handler
         self.ui.setupButton.clicked.connect(self.showSetupWindow)
         # view setup 
         self.ui.viewExptSetupButton.clicked.connect(self.viewSetup)
 
-
     def showSetupWindow(self):
         self.setupWindow.show()
 
     def viewSetup(self):
-        pass
+        # calculate what to display the window
+        expt_string = ""
+        for key, values in self.exptSetupSettings.items():
+            if key == "events":
+                expt_string += str(key) + " no : " + str(len(values))
+                expt_string += "\n"
+            else:
+                expt_string += str(key) + " : " + str(values)
+                expt_string += "\n"
+        # construct a message box on the fly and 
 
+        analysis_string = ""
+        for key, values in self.analysisSetupSettings.items():
+            analysis_string += str(key) + " : " + str(values)
+            analysis_string += "\n"
+
+        msg = QMessageBox()
+        msg.setWindowTitle("Setup and Analysis Settings")
+        msg.setText(expt_string + "\n\n" + analysis_string)
+        msg.exec()
+
+    # signal catchers from setup windows
+    def receivedExptSetup(self, exptSettings):
+        self.exptSetupSettings = exptSettings
+
+    # signal catchers from setup windows
+    def receivedAnalysisSetup(self, analysisSettings):
+        self.analysisSetupSettings = analysisSettings
 
     # Used to plot the experimental graphics
     def showExptStatus(self):

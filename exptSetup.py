@@ -41,7 +41,7 @@ class ExptSetupWindow(QMainWindow):
         self.positionsFromFile = True
         self.positionsFileName = None # positions filename 
         self.eventsCreated = False # Flag to know if events were created
-        self.events = None # assign later when the events windows closes
+        self.exptSetupData = None # assign later when the events windows closes
         self.exptDir = '.'
         self.exptSettings= {}
 
@@ -55,8 +55,8 @@ class ExptSetupWindow(QMainWindow):
 
     
     # Receiving events list from the create Events subwindow
-    def receivedEvents(self, eventsList):
-        self.events = eventsList
+    def receivedEvents(self, sentdata):
+        self.exptSetupData = sentdata
         self.eventsCreated = True
         #print(self.events)
         print("Events received .... ")
@@ -96,6 +96,11 @@ class ExptSetupWindow(QMainWindow):
         self.ui.calcGrowthRates.stateChanged.connect(self.setGrowthRates)
         # validate analysis setup
         self.ui.validateAnalysisSetupButton.clicked.connect(self.validateAnalysisSetup)
+
+
+        # save button and the close button
+        self.ui.closeExptSetupButton.clicked.connect(self.closeWindow)
+        
 
         
     def setExptNo(self, clicked):
@@ -183,7 +188,7 @@ class ExptSetupWindow(QMainWindow):
             msg.exec()
             return
 
-        if self.eventsCreated == False or self.events == None:
+        if self.eventsCreated == False or self.exptSetupData == None:
             msg = QMessageBox()
             msg.setText("Events not created")
             msg.setIcon(QMessageBox.Critical)
@@ -195,7 +200,12 @@ class ExptSetupWindow(QMainWindow):
         # to be passsed around if needed in other places
 
         self.exptSettings = {
-            "events": self.events,
+            "events": self.exptSetupData['events'],
+            "nPositions": self.exptSetupData['nPositions'],
+            "slowPositions": self.exptSetupData['slowPositions'],
+            "fastPositions": self.exptSetupData['fastPositions'],
+            "nTimePoints": self.exptSetupData['nTimePoints'],
+            "timeInterval": self.exptSetupData['timeInterval'],
             "exptNo": self.exptNo,
             "positionsFileName": self.positionsFileName,
             "posFromFile": self.positionsFromFile
@@ -220,7 +230,7 @@ class ExptSetupWindow(QMainWindow):
         self.analysisSettingsValidated = False
         if s == Qt.Checked:
             self.analysisSettings["deadAlive"] = True
-        elif s == Qt.Unchekced:
+        elif s == Qt.Unchecked:
             self.analysisSettings["deadAlive"] = None
     
     def setGrowthRates(self, s):
@@ -263,6 +273,10 @@ class ExptSetupWindow(QMainWindow):
         msg.setText("Analysis settings done")
         msg.setIcon(QMessageBox.Information)
         msg.exec()
+    
+    # close the window, just the view, the object still exists
+    def closeWindow(self):
+        self.close()
 
 
 if __name__ == "__main__":

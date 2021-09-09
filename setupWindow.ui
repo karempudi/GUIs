@@ -295,9 +295,9 @@
     </property>
     <layout class="QHBoxLayout" name="exptSaveCloseButtons">
      <item>
-      <widget class="QPushButton" name="saveExptSetupButton">
+      <widget class="QPushButton" name="resetExptSetupButton">
        <property name="text">
-        <string>Save</string>
+        <string>Reset</string>
        </property>
       </widget>
      </item>

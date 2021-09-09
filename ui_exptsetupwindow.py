@@ -167,10 +167,10 @@ class Ui_SetupWindow(object):
         self.exptSaveCloseButtons = QHBoxLayout(self.horizontalLayoutWidget_2)
         self.exptSaveCloseButtons.setObjectName(u"exptSaveCloseButtons")
         self.exptSaveCloseButtons.setContentsMargins(0, 0, 0, 0)
-        self.saveExptSetupButton = QPushButton(self.horizontalLayoutWidget_2)
-        self.saveExptSetupButton.setObjectName(u"saveExptSetupButton")
+        self.resetExptSetupButton = QPushButton(self.horizontalLayoutWidget_2)
+        self.resetExptSetupButton.setObjectName(u"resetExptSetupButton")
 
-        self.exptSaveCloseButtons.addWidget(self.saveExptSetupButton)
+        self.exptSaveCloseButtons.addWidget(self.resetExptSetupButton)
 
         self.closeExptSetupButton = QPushButton(self.horizontalLayoutWidget_2)
         self.closeExptSetupButton.setObjectName(u"closeExptSetupButton")
@@ -215,7 +215,7 @@ class Ui_SetupWindow(object):
         self.calcDeadAlive.setText(QCoreApplication.translate("SetupWindow", u"DeadAlive", None))
         self.calcGrowthRates.setText(QCoreApplication.translate("SetupWindow", u"Growth Rates", None))
         self.validateAnalysisSetupButton.setText(QCoreApplication.translate("SetupWindow", u"Validate Analysis Setup", None))
-        self.saveExptSetupButton.setText(QCoreApplication.translate("SetupWindow", u"Save", None))
+        self.resetExptSetupButton.setText(QCoreApplication.translate("SetupWindow", u"Reset", None))
         self.closeExptSetupButton.setText(QCoreApplication.translate("SetupWindow", u"Close", None))
     # retranslateUi
 

@@ -10,7 +10,7 @@ from ui_eventswindow import Ui_EventsWindow
 
 class EventsWindow(QMainWindow):
 
-    eventsCreated = Signal(list)
+    eventsCreated = Signal(dict)
 
     def __init__(self):
         super(EventsWindow, self).__init__()
@@ -54,6 +54,7 @@ class EventsWindow(QMainWindow):
         self.listSlowPositions = []
         self.finalEvents = []
         self.finalizedEvents = False
+        self.sentData = {}
 
 
     def setupButtonHandlers(self):
@@ -192,7 +193,14 @@ class EventsWindow(QMainWindow):
                     print("-----")
         # Events have been created
         self.finalizedEvents = True
-        self.eventsCreated.emit(self.finalEvents)
+        self.sentData['events'] = self.finalEvents
+        self.sentData['nTimePoints'] = self.nTimePoints
+        self.sentData['nPositions'] = len(self.positionsData.keys())
+        self.sentData['slowPositions'] = self.listSlowPositions
+        self.sentData['fastPositions'] = self.listFastPositions
+        self.sentData['timeInterval'] = self.minTimeInterval
+
+        self.eventsCreated.emit(self.sentData)
 
     def resetFinalEvents(self, clicked):
         self.finalEvents = []
