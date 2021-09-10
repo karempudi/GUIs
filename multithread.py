@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         self.counter = 0
 
         layout = QVBoxLayout()
-        self.l =QLabel("Start")
+        self.l = QLabel("Start")
         b = QPushButton("Danger!")
         b.pressed.connect(self.oh_no)
 

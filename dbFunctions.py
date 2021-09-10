@@ -2,6 +2,8 @@ import psycopg2 as pgdatabase
 from datetime import datetime
 import sys
 import os
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
+
 #######################################################
 #######################################################
 ######## CREATING/DELETING DATABASE AND TABLES ########
@@ -36,7 +38,7 @@ def createExptDatabase(dbname, dbuser='postgres', dbpassword='postgres'):
             print(f"Creating database for the current experiment with name: {dbname}")
     except pgdatabase.DatabaseError as e:
         print(f"Error: {e}")
-        msg.QMessageBox()
+        msg = QMessageBox()
         msg.setText(f"Expt database creation error {e}")
         msg.setIcon(QMessageBox.warning)
         msg.exec()
