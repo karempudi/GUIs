@@ -3,6 +3,7 @@ from datetime import datetime
 import sys
 import os
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
+import argparse
 
 #######################################################
 #######################################################
@@ -275,3 +276,7 @@ def readGrowths():
     finally:
         if con:
             con.close()
+
+
+if __name__ == "__main__":
+    print("Database creation started")

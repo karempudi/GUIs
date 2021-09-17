@@ -23,12 +23,6 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.setWindowTitle("Main Window")
 
-        # timing of the experimental status plots
-        self.timer = QTimer()
-        self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.updateRunStatus)
-        self.timer.start()
-
 
         # expt and analysis objects
         self.exptSetupSettings = None
@@ -41,6 +35,14 @@ class MainWindow(QMainWindow):
         self.setupWindow =  ExptSetupWindow()
         self.setupWindow.setupDone.connect(self.receivedExptSetup)
         self.setupWindow.analysisSetupDone.connect(self.receivedAnalysisSetup)
+
+        # timing of the experimental status plots
+        self.showExptStatus()
+        self.timer = QTimer()
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.updateRunStatus)
+        self.timer.start()
+
 
 
     def setupButtonHandlers(self):
@@ -97,7 +99,7 @@ class MainWindow(QMainWindow):
         self.ui.imgArrivalPlot.ui.menuBtn.hide()
 
     def updateRunStatus(self):
-        self.numpy_arrival = np.eye(3)  + 1.0 
+        self.numpy_arrival  += 1.0 
         self.ui.imgArrivalPlot.setImage(self.numpy_arrival)
 
 

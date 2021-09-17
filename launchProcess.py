@@ -46,7 +46,7 @@ class TestWindow(QMainWindow):
             self.p.readyReadStandardError.connect(self.handle_stderr)
             self.p.stateChanged.connect(self.handle_state)
             self.p.finished.connect(self.process_finished)
-            self.p.start("python", ["processScript.py"])
+            self.p.start("python", ["processScript.py", "100"])
 
     def handle_stderr(self):
         data = self.p.readAllStandardError()
