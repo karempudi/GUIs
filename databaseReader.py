@@ -62,7 +62,11 @@ class dbPlotWindow(QMainWindow):
         self.ui.plot.ui.histogram.hide()
         self.ui.plot.ui.roiBtn.hide()
         self.ui.plot.ui.menuBtn.hide()
-    
+        self.scatterPlot = self.ui.scatterPlot.getPlotItem()
+        self.scatterPlot.setLabel('left', text='position')
+        self.scatterPlot.setLabel('bottom', text='position')
+        self.scatterPlot.setTitle(title='Image Arrival')
+
     # update plots
     def updatePlot(self):
         # connect to database and update the plot
@@ -87,7 +91,7 @@ class dbPlotWindow(QMainWindow):
             if len(data) == 0:
                 data = []
 
-        
+        print(data)
         # now use data to updateplot
         self.numpy_arrival = np.zeros((10, 10))
         for (i, (position, time)) in enumerate(data):
@@ -96,6 +100,8 @@ class dbPlotWindow(QMainWindow):
             print(self.numpy_arrival)
 
         self.ui.plot.setImage(self.numpy_arrival, levels=(0, 1))
+        self.scatterPlot.plot(np.array(data), symbol='o', pen=pg.mkPen(None))
+
 
         
     

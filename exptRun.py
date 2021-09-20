@@ -14,6 +14,8 @@ class exptRun(object):
 
 # Run this inside a QProcess in the main GUI window
 if __name__ == "__main__":
-
     # Create and run the experiment
     print("Starting experiment analysis")
+
+
+

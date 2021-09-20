@@ -13,13 +13,14 @@ from PySide6.QtGui import *  # type: ignore
 from PySide6.QtWidgets import *  # type: ignore
 
 from pyqtgraph import ImageView
+from pyqtgraph import PlotWidget
 
 
 class Ui_dbPlotWindow(object):
     def setupUi(self, dbPlotWindow):
         if not dbPlotWindow.objectName():
             dbPlotWindow.setObjectName(u"dbPlotWindow")
-        dbPlotWindow.resize(458, 437)
+        dbPlotWindow.resize(922, 725)
         self.centralwidget = QWidget(dbPlotWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.plot = ImageView(self.centralwidget)
@@ -31,10 +32,13 @@ class Ui_dbPlotWindow(object):
         self.startPlotButton = QPushButton(self.centralwidget)
         self.startPlotButton.setObjectName(u"startPlotButton")
         self.startPlotButton.setGeometry(QRect(160, 30, 75, 23))
+        self.scatterPlot = PlotWidget(self.centralwidget)
+        self.scatterPlot.setObjectName(u"scatterPlot")
+        self.scatterPlot.setGeometry(QRect(370, 80, 271, 221))
         dbPlotWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(dbPlotWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 458, 21))
+        self.menubar.setGeometry(QRect(0, 0, 922, 21))
         dbPlotWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(dbPlotWindow)
         self.statusbar.setObjectName(u"statusbar")
