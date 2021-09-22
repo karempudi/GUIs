@@ -17,8 +17,9 @@ from datetime import datetime
 
 class MainWindow(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, exptObject=None):
         super(MainWindow, self).__init__()
+        self.exptObject = exptObject
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowTitle("Main Window")
