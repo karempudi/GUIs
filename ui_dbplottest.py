@@ -35,6 +35,12 @@ class Ui_dbPlotWindow(object):
         self.scatterPlot = PlotWidget(self.centralwidget)
         self.scatterPlot.setObjectName(u"scatterPlot")
         self.scatterPlot.setGeometry(QRect(370, 80, 271, 221))
+        self.processButton = QPushButton(self.centralwidget)
+        self.processButton.setObjectName(u"processButton")
+        self.processButton.setGeometry(QRect(290, 30, 75, 23))
+        self.terminateButton = QPushButton(self.centralwidget)
+        self.terminateButton.setObjectName(u"terminateButton")
+        self.terminateButton.setGeometry(QRect(400, 30, 111, 23))
         dbPlotWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(dbPlotWindow)
         self.menubar.setObjectName(u"menubar")
@@ -53,5 +59,7 @@ class Ui_dbPlotWindow(object):
         dbPlotWindow.setWindowTitle(QCoreApplication.translate("dbPlotWindow", u"MainWindow", None))
         self.startWriteButton.setText(QCoreApplication.translate("dbPlotWindow", u"Start db write", None))
         self.startPlotButton.setText(QCoreApplication.translate("dbPlotWindow", u"Start Plotting", None))
+        self.processButton.setText(QCoreApplication.translate("dbPlotWindow", u"Start Process", None))
+        self.terminateButton.setText(QCoreApplication.translate("dbPlotWindow", u"Terminate Process", None))
     # retranslateUi
 

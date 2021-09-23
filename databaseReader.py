@@ -10,7 +10,27 @@ import numpy as np
 import sys
 from ui_dbplottest import Ui_dbPlotWindow
 import psycopg2 as pgdatabase
+import multiprocessing as mp
+import time
+from functools import partial
 
+class hello(object):
+
+    def __init__(self, x):
+        self.x = x
+
+    def hello_function(self, event):
+        for i in range(self.x):
+            sys.stdout.write(f"Time point is: {i}\n")
+            sys.stdout.flush()
+            time.sleep(1)
+
+        while not event.is_set():
+            sys.stdout.write("Process still alive\n")
+            sys.stdout.flush()
+            time.sleep(2)
+    
+        
 
 class dbPlotWindow(QMainWindow):
     
@@ -25,14 +45,15 @@ class dbPlotWindow(QMainWindow):
         self.writingProcess = None
         self.plottingStarted = None
 
+        self.helloObject = hello(30)
+
         self.plotInitialize()
 
     def startPlotting(self):
         self.timer = QTimer()
-        self.timer.setInterval(50)
+        self.timer.setInterval(1000)
         self.timer.timeout.connect(self.updatePlot)
         self.timer.start()
- 
 
     def setupButtonHandlers(self):
         # start writing in a seperate process
@@ -40,6 +61,24 @@ class dbPlotWindow(QMainWindow):
 
         # start plotting as soon as the button is clicked
         self.ui.startPlotButton.clicked.connect(self.startPlotting)
+
+        # process button
+        self.ui.processButton.clicked.connect(self.startNewPythonProcess)
+
+        # terminate process
+        self.ui.terminateButton.clicked.connect(self.terminateProcess)
+
+
+
+    def startNewPythonProcess(self):
+
+        self.event = mp.Event()
+        self.newPythonProcess = mp.Process(target=self.helloObject.hello_function, args=(self.event,))
+        self.newPythonProcess.start()
+    
+    def terminateProcess(self):
+        self.event.set()
+
 
     # Launch the write process in a sub-process of the application
     def startWriteProcess(self):
@@ -81,7 +120,7 @@ class dbPlotWindow(QMainWindow):
             # grab the selection
             cur.execute("SELECT position, timepoint from plotter")
             data = cur.fetchall()
-            print(len(data))
+            #print(len(data))
         except pgdatabase.DatabaseError as e:
             print(f"Database error during plot updates")
             data = []
@@ -91,13 +130,14 @@ class dbPlotWindow(QMainWindow):
             if len(data) == 0:
                 data = []
 
-        print(data)
+        #print(data)
         # now use data to updateplot
         self.numpy_arrival = np.zeros((10, 10))
         for (i, (position, time)) in enumerate(data):
             self.numpy_arrival[int(position), int(time)] +=1
         if len(data) == 100:
-            print(self.numpy_arrival)
+            #print(self.numpy_arrival)
+            print("100 points acquired\n")
 
         self.ui.plot.setImage(self.numpy_arrival, levels=(0, 1))
         self.scatterPlot.plot(np.array(data), symbol='o', pen=pg.mkPen(None))
